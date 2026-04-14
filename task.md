@@ -18,17 +18,17 @@
 
 #### PBI M1-1 Frontend workspace bootstrap
 
-- [ ] 初始化 Vite React TypeScript 專案。
-- [ ] 建立 frontend/src/app 入口結構。
-- [ ] 建立 frontend/src/shared 目錄。
-- [ ] 建立 frontend/src/domains 目錄。
-- [ ] 建立 frontend/src/domains/dashboard 目錄。
-- [ ] 建立 frontend/src/domains/market 目錄。
-- [ ] 建立 frontend/src/domains/watchlist 目錄。
-- [ ] 建立 frontend/src/domains/charting 目錄。
-- [ ] 建立 frontend/src/domains/connection-health 目錄。
-- [ ] 建立 frontend/src/test 目錄。
-- [ ] 設定 TypeScript path alias。
+- [x] 初始化 Vite React TypeScript 專案。
+- [x] 建立 frontend/src/app 入口結構。
+- [x] 建立 frontend/src/shared 目錄。
+- [x] 建立 frontend/src/domains 目錄。
+- [x] 建立 frontend/src/domains/dashboard 目錄。
+- [x] 建立 frontend/src/domains/market 目錄。
+- [x] 建立 frontend/src/domains/watchlist 目錄。
+- [x] 建立 frontend/src/domains/charting 目錄。
+- [x] 建立 frontend/src/domains/connection-health 目錄。
+- [x] 建立 frontend/src/test 目錄。
+- [x] 設定 TypeScript path alias。
 
 #### PBI M1-2 Frontend tooling
 
