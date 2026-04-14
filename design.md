@@ -17,7 +17,7 @@
 
 - React 18 + TypeScript
 - Vite 作為建置工具
-- RxJS 處理 WebSocket stream、緩衝與重連流程
+- RxJS 作為優先建議方案，處理 WebSocket stream、緩衝、共享訂閱與重連流程；若採替代方案，仍需滿足相同能力與可測試性
 - Zustand 或 Redux Toolkit 作為 UI 與 domain state 管理
 - TradingView Lightweight Charts 作為 K 線圖主體
 - React Hook Form + Zod 作為輸入驗證
@@ -47,7 +47,7 @@
 3. BFF 連接交易所 REST API 取得 bootstrap 資料。
 4. BFF 連接交易所 WebSocket stream，接收 ticker 與 kline 更新。
 5. BFF 將資料正規化後推送至前端 WebSocket。
-6. 前端以 RxJS 進行 buffering、throttling 與 reconnect state 管理。
+6. 前端以 RxJS 或等效 event-stream abstraction 進行 buffering、throttling、shared subscription 與 reconnect state 管理。
 7. Store 更新後，watchlist、價格區塊、圖表與連線狀態元件同步刷新。
 
 ### 4.2 邏輯分層
@@ -57,6 +57,14 @@
 - Domain Layer: kline model、indicator 計算、連線狀態模型。
 - Infrastructure Layer: exchange API client、WebSocket client、storage adapter。
 
+### 4.3 前端檔案組織原則
+
+- 前端以領域導向的垂直切片方式組織檔案，不以全域 components、hooks、utils 資料夾作為預設主結構。
+- 與某個業務領域強耦合的元件、hooks、型別、schema、store、service、utils，應放在該領域資料夾下。
+- 只有跨領域重用且不承載特定業務語意的模組，才放入 shared。
+- app 僅負責 application shell、router、providers 與跨頁組裝，不承載領域細節。
+- 領域之間應透過明確的 public API 或 index barrel 暴露能力，避免任意深層互相引用。
+
 ## 5. 目錄結構建議
 
 ```text
@@ -64,19 +72,43 @@ live-trading-pulse/
   frontend/
     src/
       app/
-      components/
-      features/
-        market-stream/
-        charts/
-        watchlist/
-        connection-health/
-      domain/
-        indicators/
+      shared/
+        ui/
+        lib/
+        types/
+      domains/
+        dashboard/
+          components/
+          hooks/
+          store/
+          utils/
+          types/
         market/
-      services/
-      stores/
-      streams/
-      utils/
+          api/
+          streams/
+          models/
+          mappers/
+          types/
+        watchlist/
+          components/
+          hooks/
+          store/
+          storage/
+          utils/
+          types/
+        charting/
+          components/
+          adapters/
+          indicators/
+          hooks/
+          utils/
+          types/
+        connection-health/
+          components/
+          store/
+          services/
+          utils/
+          types/
       test/
   backend/
     src/
@@ -90,6 +122,13 @@ live-trading-pulse/
     requirements.md
     design.md
 ```
+
+補充原則:
+
+- dashboard 為頁面組裝領域，負責串接 market、watchlist、charting、connection-health。
+- market、watchlist、charting、connection-health 各自維護自己的元件與邏輯，不把檔案拆散到全域資料夾。
+- shared 僅放無明確業務語意的通用 UI、基礎函式與共用型別。
+- 若某模組開始承載明確業務語意，應從 shared 移回對應 domain。
 
 ## 6. 核心模組設計
 
@@ -107,6 +146,8 @@ live-trading-pulse/
 - 以 symbol 為 key 維護最新市場快照。
 - 對價格卡片類 UI 使用較高頻率更新。
 - 對圖表類 UI 使用較低頻率批次更新，避免拖慢主執行緒。
+- stream 模組對 React 元件僅暴露簡單訂閱或 store update 介面，避免元件直接耦合 operator 細節。
+- 連線健康應優先依賴 BFF heartbeat；若改採訊息間隔推估，需避免把低活躍市場誤判為斷線。
 
 建議事件模型:
 
@@ -127,9 +168,12 @@ live-trading-pulse/
 關鍵設計:
 
 - 初次載入先抓取歷史 klines，再銜接即時 kline 更新。
+- 歷史與即時資料以 symbol + interval + candle open time 合併；同 open time 的未收盤資料覆寫最後一根，跨 open time 才 append。
 - MA 使用純函式計算，輸出序列供圖表覆寫。
 - KD 使用 rolling window 計算 RSV、K、D 值。
 - 圖表主圖與 KD 副圖以相同 time scale 同步捲動。
+- 圖表更新需透過 chart adapter 使用 series update 或 append imperative API，不以 React state 全量重建 series。
+- 指標計算應在 domain 或 stream 層完成，不在 React render 期間執行完整序列重算。
 
 ### 6.3 Watchlist 模組
 
@@ -208,6 +252,14 @@ type ConnectionHealth = {
 };
 ```
 
+### 7.5 K 線時間與更新慣例
+
+- Candle.time 一律使用 UTC epoch milliseconds。
+- chart adapter 依圖表庫需求負責時間格式轉換。
+- REST 與 WebSocket 重疊資料以 symbol + interval + time 去重。
+- isClosed = false 表示暫時 K 線，應覆寫最後一根並觸發局部指標重算。
+- isClosed = true 表示該根可視為 finalized，下一個新 open time 才建立新 candle。
+
 ## 8. 指標計算設計
 
 ### 8.1 MA
@@ -215,6 +267,7 @@ type ConnectionHealth = {
 - 支援至少 MA5、MA10、MA20。
 - 以收盤價序列計算簡單移動平均。
 - 當資料不足時回傳 null，避免圖表誤畫。
+- 當資料量變大時，可採 rolling sum 避免每次全量重算。
 
 公式:
 
@@ -245,8 +298,11 @@ $$
 
 - 指標函式保持純函式化，便於單元測試。
 - 指標計算與圖表渲染解耦，避免 UI 元件承擔財務邏輯。
+- 第一版可接受以最後一段 window 進行局部重算；若後續監控交易對與指標數量擴大，再評估 Web Worker。
 
 ## 9. RxJS Stream 設計
+
+以下以 RxJS 為預設設計；若採較輕量替代方案，仍需提供等效的 backoff、shared subscription、batch update、teardown 與測試能力。
 
 ### 9.1 前端資料流
 
