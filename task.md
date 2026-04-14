@@ -32,17 +32,17 @@
 
 #### PBI M1-2 Frontend tooling
 
-- [ ] 安裝狀態管理依賴。
-- [ ] 安裝 RxJS。
-- [ ] 安裝圖表庫。
-- [ ] 安裝 React Hook Form。
-- [ ] 安裝 Zod。
-- [ ] 安裝 Vitest 與 Testing Library。
-- [ ] 設定 ESLint。
-- [ ] 設定 formatter。
-- [ ] 建立 frontend 的 dev script。
-- [ ] 建立 frontend 的 build script。
-- [ ] 建立 frontend 的 test script。
+- [x] 安裝狀態管理依賴。
+- [x] 安裝 RxJS。
+- [x] 安裝圖表庫。
+- [x] 安裝 React Hook Form。
+- [x] 安裝 Zod。
+- [x] 安裝 Vitest 與 Testing Library。
+- [x] 設定 ESLint。
+- [x] 設定 formatter。
+- [x] 建立 frontend 的 dev script。
+- [x] 建立 frontend 的 build script。
+- [x] 建立 frontend 的 test script。
 
 #### PBI M1-3 Frontend architecture conventions
 
