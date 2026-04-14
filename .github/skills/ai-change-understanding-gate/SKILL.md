@@ -1,6 +1,6 @@
 ---
 name: ai-change-understanding-gate
-description: 在提交、commit 或交接 AI 產生的程式碼前，建立一個由使用者作答的理解門檻。當 agent 已經產生改動，而使用者希望在送出前先確認自己真的理解這些改動時使用。適用於「提交前先確認你懂」、「出幾題檢查我是不是真的懂」、「before commit, prove the user understands the code」、「commit 前先考我」等情境。只要使用者回答沒有過關，就不得進行 commit 或交付。
+description: 在提交、commit 或交接 AI 產生的程式碼前，建立一個由使用者作答的理解門檻。當 agent 已經產生改動，而使用者希望在送出前先確認自己真的理解這些改動時使用；如果使用者直接要求「幫我做 commit」、「幫我提交」、「commit this」、「幫我送出這次修改」而本次變更含 agent 或 AI 產生內容，也必須自動使用，不需要等使用者另外要求。適用於「提交前先確認你懂」、「出幾題檢查我是不是真的懂」、「before commit, prove the user understands the code」、「commit 前先考我」、「幫我做 commit」、「幫我提交」等情境。只要使用者回答沒有過關，就不得進行 commit 或交付。
 metadata:
   author: live-trading-pulse
   version: "0.1.0"
@@ -9,6 +9,8 @@ metadata:
 # AI 改動理解門檻
 
 這個技能用在提交、commit 或交接 AI 產生的程式碼之前。目的不是讓 agent 自問自答，而是由 agent 根據這次改動出題，讓使用者親自回答；只有當回答足以證明理解內容時，才允許繼續 commit 或交付。
+
+如果使用者直接要求 commit、提交或送出本次由 agent 參與產生的改動，agent 應先啟動這個 gate，而不是直接執行 commit。
 
 ## 核心流程
 
