@@ -4,12 +4,18 @@ import { describe, expect, it } from 'vitest';
 import { App } from './index';
 
 describe('App', () => {
-  it('renders the starter heading', () => {
+  it('renders the dashboard architecture shell', () => {
     render(<App />);
 
     expect(
       screen.getByRole('heading', {
-        name: /get started/i,
+        name: /live trading pulse/i,
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', {
+        name: /domain layout/i,
       }),
     ).toBeInTheDocument();
   });

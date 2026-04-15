@@ -32,6 +32,45 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/app/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@domains/*/*'],
+              message:
+                'The app layer may only consume each domain through that domain public API barrel.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/domains/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@domains/*/*'],
+              message:
+                'Import other domains through their public API barrel instead of deep paths.',
+            },
+            {
+              group: ['@/components/*', '@/hooks/*', '@/utils/*'],
+              message:
+                'Do not introduce global components/hooks/utils directories as default storage; keep code in a domain or shared/.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['src/**/*.test.{ts,tsx}'],
     extends: [
       testingLibrary.configs['flat/react'],

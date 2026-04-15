@@ -1,73 +1,44 @@
-# React + TypeScript + Vite
+# Frontend Workspace
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live Trading Pulse frontend 採用 React + TypeScript + Vite，並以領域導向的垂直切片結構作為預設組織方式。
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `npm run dev`: 啟動開發伺服器。
+- `npm run build`: 先 lint，再做 TypeScript build 與 Vite build。
+- `npm run test`: 執行 Vitest。
+- `npm run test:coverage`: 產生測試覆蓋率報告。
 
-## React Compiler
+## Architecture Conventions
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/app/` 只負責 application shell、providers、routing 與跨領域組裝，不承載市場、圖表、自選清單或連線健康等領域細節。
+- `src/domains/` 是主要開發重心。每個 domain 維護自己的 components、hooks、store、types、utils 與基礎服務。
+- `src/shared/` 只放跨領域重用、且不帶業務語意的 UI、基礎函式與共用型別。
+- 不以 `src/components`、`src/hooks`、`src/utils` 這類全域資料夾作為預設收納點。若程式碼帶有明確業務語意，應留在對應 domain。
 
-## Expanding the ESLint configuration
+## Public API Rule
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+每個 domain 必須透過自己的 `index.ts` 對外暴露功能。其他 layer 只能匯入 domain root，不應深層引用內部實作。
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```ts
+import { DashboardWorkspace } from '@domains/dashboard';
+import { MarketDomainCard } from '@domains/market';
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+以下做法視為違規，並由 ESLint 規則阻擋：
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```ts
+import { DashboardWorkspace } from '@domains/dashboard/components/DashboardWorkspace';
 ```
+
+## Domain Layout
+
+目前各 domain 預設骨架如下：
+
+- `dashboard/`: components、hooks、store、types、utils。
+- `market/`: api、streams、models、mappers、types。
+- `watchlist/`: components、hooks、store、storage、types、utils。
+- `charting/`: components、adapters、indicators、hooks、types、utils。
+- `connection-health/`: components、store、services、types、utils。
+
+dashboard 是頁面組裝 domain，負責串接 market、watchlist、charting、connection-health。app layer 只透過 dashboard 的 public API 完成最上層組裝。

@@ -46,15 +46,15 @@
 
 #### PBI M1-3 Frontend architecture conventions
 
-- [ ] 定義 shared 與 domains 的邊界規則。
-- [ ] 定義 app 層責任範圍。
-- [ ] 為 dashboard domain 建立內部子目錄。
-- [ ] 為 market domain 建立內部子目錄。
-- [ ] 為 watchlist domain 建立內部子目錄。
-- [ ] 為 charting domain 建立內部子目錄。
-- [ ] 為 connection-health domain 建立內部子目錄。
-- [ ] 定義 domain public API 匯出方式。
-- [ ] 禁止以全域 components 或 hooks 作為預設收納點。
+- [x] 定義 shared 與 domains 的邊界規則。
+- [x] 定義 app 層責任範圍。
+- [x] 為 dashboard domain 建立內部子目錄。
+- [x] 為 market domain 建立內部子目錄。
+- [x] 為 watchlist domain 建立內部子目錄。
+- [x] 為 charting domain 建立內部子目錄。
+- [x] 為 connection-health domain 建立內部子目錄。
+- [x] 定義 domain public API 匯出方式。
+- [x] 禁止以全域 components 或 hooks 作為預設收納點。
 
 #### PBI M1-4 Backend 或 BFF workspace bootstrap
 
