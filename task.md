@@ -58,14 +58,14 @@
 
 #### PBI M1-4 Backend 或 BFF workspace bootstrap
 
-- [ ] 初始化 Node.js TypeScript 專案。
-- [ ] 安裝 Fastify 或 Express。
-- [ ] 建立 backend/src 目錄。
-- [ ] 建立 backend/src/modules 目錄。
-- [ ] 建立 backend 的 dev script。
-- [ ] 建立 backend 的 build script。
-- [ ] 建立 backend 的 test script。
-- [ ] 建立基本 health check route。
+- [x] 初始化 Node.js TypeScript 專案。
+- [x] 安裝 Fastify 或 Express。
+- [x] 建立 backend/src 目錄。
+- [x] 建立 backend/src/modules 目錄。
+- [x] 建立 backend 的 dev script。
+- [x] 建立 backend 的 build script。
+- [x] 建立 backend 的 test script。
+- [x] 建立基本 health check route。
 
 #### PBI M1-5 Workspace conventions 與文件
 
