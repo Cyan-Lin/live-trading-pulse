@@ -91,13 +91,13 @@
 
 #### PBI M2-1 Exchange REST client
 
-- [ ] 建立交易所 REST client。
-- [ ] 實作 pairs API 呼叫。
-- [ ] 實作 klines API 呼叫。
-- [ ] 定義 REST response schema。
-- [ ] 對 pairs response 做 schema 驗證。
-- [ ] 對 klines response 做 schema 驗證。
-- [ ] 將 exchange REST error 正規化為內部錯誤型別。
+- [x] 建立交易所 REST client。
+- [x] 實作 pairs API 呼叫。
+- [x] 實作 klines API 呼叫。
+- [x] 定義 REST response schema。
+- [x] 對 pairs response 做 schema 驗證。
+- [x] 對 klines response 做 schema 驗證。
+- [x] 將 exchange REST error 正規化為內部錯誤型別。
 
 #### PBI M2-2 Domain model 與 mapping
 
