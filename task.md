@@ -69,23 +69,23 @@
 
 #### PBI M1-5 Workspace conventions 與文件
 
-- [ ] 建立 frontend 環境變數範本檔。
-- [ ] 建立 backend 環境變數範本檔。
-- [ ] 補上 API base URL 變數占位值。
-- [ ] 補上 WebSocket base URL 變數占位值。
-- [ ] 補上預設 symbol 變數占位值。
-- [ ] 補上預設 interval 變數占位值。
-- [ ] 建立 docs 目錄。
-- [ ] 補齊 README 啟動步驟。
-- [ ] 補齊 README 資料來源假設。
-- [ ] 補齊前端領域導向目錄規範說明。
+- [x] 建立 frontend 環境變數範本檔。
+- [x] 建立 backend 環境變數範本檔。
+- [x] 補上 API base URL 變數占位值。
+- [x] 補上 WebSocket base URL 變數占位值。
+- [x] 補上預設 symbol 變數占位值。
+- [x] 補上預設 interval 變數占位值。
+- [x] 建立 docs 目錄。
+- [x] 補齊 README 啟動步驟。
+- [x] 補齊 README 資料來源假設。
+- [x] 補齊前端領域導向目錄規範說明。
 
 完成標準:
 
-- [ ] 前後端皆可在本機啟動。
-- [ ] 目錄結構與技術選型符合設計文件。
-- [ ] 前端目錄結構符合領域導向分類原則。
-- [ ] 環境變數不硬編碼於原始碼。
+- [x] 前後端皆可在本機啟動。
+- [x] 目錄結構與技術選型符合設計文件。
+- [x] 前端目錄結構符合領域導向分類原則。
+- [x] 環境變數不硬編碼於原始碼。
 
 ### M2. 市場資料接入與 BFF 正規化
 
@@ -97,6 +97,7 @@
 - [ ] 定義 REST response schema。
 - [ ] 對 pairs response 做 schema 驗證。
 - [ ] 對 klines response 做 schema 驗證。
+- [ ] 將 exchange REST error 正規化為內部錯誤型別。
 
 #### PBI M2-2 Domain model 與 mapping
 
@@ -108,11 +109,16 @@
 - [ ] 定義 LatencySampleEvent 型別。
 - [ ] 實作 symbol normalizer。
 - [ ] 實作交易所 symbol 到內部 symbol mapping。
+- [ ] 實作 ticker payload 到 PriceTickEvent mapping。
+- [ ] 實作 kline payload 到 KlineUpdateEvent mapping。
+- [ ] 定義 24h change 的計算基準。
+- [ ] 統一時間戳為 UTC epoch milliseconds。
 
 #### PBI M2-3 BFF REST API
 
 - [ ] 建立 GET /api/pairs route。
 - [ ] 將 route 接上 pairs client。
+- [ ] 為 /api/pairs 定義 query、limit 與回傳格式。
 - [ ] 建立 GET /api/klines route。
 - [ ] 將 route 接上 klines client。
 - [ ] 定義 API error response 格式。
@@ -122,10 +128,16 @@
 
 - [ ] 建立交易所上游 WebSocket client。
 - [ ] 建立前端使用的 WebSocket relay endpoint。
+- [ ] 定義 relay subscribe payload。
+- [ ] 定義 relay unsubscribe payload。
 - [ ] 轉送 ticker stream。
 - [ ] 轉送 kline stream。
+- [ ] 處理上游 reconnect 後自動 resubscribe。
+- [ ] 維護目前啟用中的 symbol 訂閱集合。
+- [ ] 對多個 frontend client 做 relay fan-out。
 - [ ] 加入 relay reconnect 機制。
 - [ ] 加入 relay 錯誤事件輸出。
+- [ ] 加入 relay health 狀態輸出。
 
 #### PBI M2-5 K 線 bootstrap 與正規化
 
@@ -134,12 +146,15 @@
 - [ ] 實作 REST 與 WebSocket 重疊資料去重。
 - [ ] 實作未收盤 K 線覆寫規則。
 - [ ] 實作新 open time append 規則。
+- [ ] 實作 late kline 或 updated kline 覆寫規則。
 
 完成標準:
 
 - [ ] 前端可取得交易對清單與歷史 K 線資料。
 - [ ] WebSocket relay 可穩定推送價格與 K 線更新。
 - [ ] 前後端間資料格式固定且有型別定義。
+- [ ] exchange 特有 payload 已隔離在 adapter 或 mapping 層。
+- [ ] symbol 與 timestamp 規則已被文件化並固定。
 
 ### M3. 前端資料流與狀態管理
 
