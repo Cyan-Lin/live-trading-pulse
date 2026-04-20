@@ -101,18 +101,18 @@
 
 #### PBI M2-2 Domain model 與 mapping
 
-- [ ] 定義 TradingPair 型別。
-- [ ] 定義 Candle 型別。
-- [ ] 定義 PriceTickEvent 型別。
-- [ ] 定義 KlineUpdateEvent 型別。
-- [ ] 定義 ConnectionStatusEvent 型別。
-- [ ] 定義 LatencySampleEvent 型別。
-- [ ] 實作 symbol normalizer。
-- [ ] 實作交易所 symbol 到內部 symbol mapping。
-- [ ] 實作 ticker payload 到 PriceTickEvent mapping。
-- [ ] 實作 kline payload 到 KlineUpdateEvent mapping。
-- [ ] 定義 24h change 的計算基準。
-- [ ] 統一時間戳為 UTC epoch milliseconds。
+- [x] 定義 TradingPair 型別。
+- [x] 定義 Candle 型別。
+- [x] 定義 PriceTickEvent 型別。
+- [x] 定義 KlineUpdateEvent 型別。
+- [x] 定義 ConnectionStatusEvent 型別。
+- [x] 定義 LatencySampleEvent 型別。
+- [x] 實作 symbol normalizer。
+- [x] 實作交易所 symbol 到內部 symbol mapping。
+- [x] 實作 ticker payload 到 PriceTickEvent mapping。
+- [x] 實作 kline payload 到 KlineUpdateEvent mapping。
+- [x] 定義 24h change 的計算基準。
+- [x] 統一時間戳為 UTC epoch milliseconds。
 
 #### PBI M2-3 BFF REST API
 
